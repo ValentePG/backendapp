@@ -1,60 +1,70 @@
-const stompClient = new StompJs.Client({
-    brokerURL: 'ws://' + window.location.host + '/valente-livechat-websocket'
-});
+let socket;
 
-stompClient.onConnect = (frame) => {
-    setConnected(true);
-    console.log('Connected: ' + frame);
-    stompClient.subscribe('/topics/livechat', (message) => {
-        updateLiveChat(JSON.parse(message.body).content);
-    });
-};
+function connectWebSocket() {
+  socket = new WebSocket("ws://localhost:8080/teste");
+  socket.addEventListener("open", handleSocketOpen);
+  socket.addEventListener("error", handleSocketError);
+  socket.addEventListener("close", handleSocketClose);
+  socket.onmessage = (event) => {
+    updateLiveChat(event.data);
+  };
+}
 
-stompClient.onWebSocketError = (error) => {
-    console.error('Error with websocket', error);
-};
+function handleSocketError(error) {
+  console.error("Erro no websocket:", error);
+}
 
-stompClient.onStompError = (frame) => {
-    console.error('Broker reported error: ' + frame.headers['message']);
-    console.error('Additional details: ' + frame.body);
-};
+function handleSocketClose() {
+  console.log("Websocket fechado.");
+}
+
+function handleSocketOpen() {
+  console.log("Websocket conectado.");
+}
 
 function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
-    }
-    else {
-        $("#conversation").hide();
-    }
+  $("#connect").prop("disabled", connected);
+  $("#disconnect").prop("disabled", !connected);
+  if (connected) {
+    $("#conversation").show();
+  } else {
+    $("#conversation").hide();
+  }
 }
 
 function connect() {
-    stompClient.activate();
+  setConnected(true);
+  connectWebSocket();
 }
 
 function disconnect() {
-    stompClient.deactivate();
-    setConnected(false);
-    console.log("Disconnected");
+
+  socket.close();
+  setConnected(false);
+
+  console.log("Disconnected");
 }
 
 function sendMessage() {
-    stompClient.publish({
-        destination: "/app/new-message",
-        body: JSON.stringify({'user': $("#user").val(), 'message': $("#message").val()})
-    });
-    $("#message").val("");
+
+  const message = {
+    user: $("#user").val(),
+    message: $("#message").val(),
+  };
+
+  socket.send(JSON.stringify(message));
+
+  $("#message").val("");
+
 }
 
 function updateLiveChat(message) {
-    $("#livechat").append("<tr><td>" + message + "</td></tr>");
+  $("#livechat").append("<tr><td>" + message + "</td></tr>");
 }
 
 $(function () {
-    $("form").on('submit', (e) => e.preventDefault());
-    $( "#connect" ).click(() => connect());
-    $( "#disconnect" ).click(() => disconnect());
-    $( "#send" ).click(() => sendMessage());
+  $("form").on("submit", (e) => e.preventDefault());
+  $("#connect").click(() => connect());
+  $("#disconnect").click(() => disconnect());
+  $("#send").click(() => sendMessage());
 });

@@ -12,7 +12,8 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class WebSocketNoStomp implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(myHandler(), "/teste");
+        registry.addHandler(myHandler(), "/teste")
+                .setAllowedOrigins("http://localhost:4200");
 
     }
 

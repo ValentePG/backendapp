@@ -14,6 +14,7 @@ public class MyHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
         String payload = message.getPayload();
+        System.out.println(payload);
 //        Gson gson = new Gson();
 //        ChatInput user = gson.fromJson(payload, ChatInput.class);
         session.sendMessage(new TextMessage(HtmlUtils.htmlEscape(payload)));

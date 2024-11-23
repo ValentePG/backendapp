@@ -15,6 +15,12 @@ public class MyHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
         String payload = message.getPayload();
         System.out.println(payload);
+
+//        System.out.println(session.getId());
+        // atributo origin mostra daonde a mensagem veio, da pra fazer bastante coisa com essa informação!
+//        System.out.println(session.getHandshakeHeaders());
+
+
 //        Gson gson = new Gson();
 //        ChatInput user = gson.fromJson(payload, ChatInput.class);
         session.sendMessage(new TextMessage(HtmlUtils.htmlEscape(payload)));

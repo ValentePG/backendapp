@@ -13,6 +13,7 @@ public class WebSocketNoStomp implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(myHandler(), "/teste");
+
     }
 
     @Bean

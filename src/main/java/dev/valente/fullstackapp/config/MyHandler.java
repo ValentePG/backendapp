@@ -2,23 +2,27 @@ package dev.valente.fullstackapp.config;
 
 import com.google.gson.Gson;
 import dev.valente.fullstackapp.model.ChatInput;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.springframework.web.util.HtmlUtils;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 
 public class MyHandler extends TextWebSocketHandler {
 
-    @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
+    protected void handleTextMessage(WebSocketSession session, TextMessage message, HttpServletRequest request) throws IOException {
         String payload = message.getPayload();
-        System.out.println(payload);
+        HttpHeaders httpHeaders = session.getHandshakeHeaders();
+        HttpSession httpSession = request.getSession();
+        InetSocketAddress address = session.getRemoteAddress();
+        String idSesssion = session.getId();
+        String ipUser = httpHeaders.getOrigin();
 
-//        System.out.println(session.getId());
-        // atributo origin mostra daonde a mensagem veio, da pra fazer bastante coisa com essa informação!
-//        System.out.println(session.getHandshakeHeaders());
 
 
 //        Gson gson = new Gson();

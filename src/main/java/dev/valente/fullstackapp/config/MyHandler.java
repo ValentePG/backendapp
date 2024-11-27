@@ -12,7 +12,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.springframework.web.util.HtmlUtils;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,18 +22,13 @@ public class MyHandler extends AbstractWebSocketHandler {
     private final Map<UUID, WebSocketSession> userSessions = new ConcurrentHashMap<>();
 
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
-
         //StandardWebSocketSession
         String payload = message.getPayload();
-        HttpHeaders httpHeaders = session.getHandshakeHeaders();
-        InetSocketAddress address = session.getRemoteAddress();
-        String ipUser = httpHeaders.getOrigin();
-
         Gson gson = new Gson();
         ChatInput user = gson.fromJson(payload, ChatInput.class);
         session.sendMessage(new TextMessage(HtmlUtils.htmlEscape(user.user() + " : " + user.message())));
-    }
 
+    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {

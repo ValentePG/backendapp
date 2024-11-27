@@ -38,7 +38,6 @@ function connect() {
 }
 
 function disconnect() {
-
   socket.close();
   setConnected(false);
 
@@ -46,7 +45,6 @@ function disconnect() {
 }
 
 function sendMessage() {
-
   const message = {
     user: $("#user").val(),
     message: $("#message").val(),
@@ -55,7 +53,6 @@ function sendMessage() {
   socket.send(JSON.stringify(message));
 
   $("#message").val("");
-
 }
 
 function updateLiveChat(message) {

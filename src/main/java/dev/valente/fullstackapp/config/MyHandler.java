@@ -22,10 +22,14 @@ public class MyHandler extends AbstractWebSocketHandler {
     private final ConcurrentHashMap<UUID, SessionInfo> userSessions = UserSessionSingleton.getInstance();
 
 
-    private final OpenAiChatModel model = OpenAiChatModel.builder()
-            .apiKey("demo")
-            .modelName(GPT_4_O_MINI)
-            .build();
+//    private final OpenAiChatModel model = OpenAiChatModel.builder()
+//            .apiKey("demo")
+//            .modelName(GPT_4_O_MINI)
+//            .build();
+//        String AiResponse = model.generate(payload);
+//
+//
+//        session.sendMessage(new TextMessage(HtmlUtils.htmlEscape(AiResponse)));
 
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
         //StandardWebSocketSession
@@ -34,21 +38,15 @@ public class MyHandler extends AbstractWebSocketHandler {
         var idSessaoAtual = UUID.fromString(session.getId());
         String payload = message.getPayload();
 
-        String AiResponse = model.generate(payload);
-
-
-        session.sendMessage(new TextMessage(HtmlUtils.htmlEscape(AiResponse)));
-
-//        userSessions.forEach((id, wbs) -> {
-//            try (var sessao = wbs.webSocketSession()){
-//
-//                if(idSessaoAtual != UUID.fromString(sessao.getId())){
-//                    sessao.sendMessage(new TextMessage(HtmlUtils.htmlEscape(payload)));
-//                }
-//            } catch (Exception error){
-//                System.err.println(error.getMessage());
-//            }
-//        });
+        userSessions.forEach((id, wbs) -> {
+            try {
+                if(idSessaoAtual != id){
+                    wbs.webSocketSession().sendMessage(new TextMessage(HtmlUtils.htmlEscape(payload)));
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
 
     }
@@ -65,13 +63,9 @@ public class MyHandler extends AbstractWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        try(var teste = userSessions.remove(UUID.fromString(session.getId()))
-                .webSocketSession()){
-            System.out.println("Sessão com ID: " + session.getId() + " foi fechada e excluída do HashMap");
-        } catch (Exception error){
-            System.err.println(error.getMessage());
-        }
-
+        userSessions.remove(UUID.fromString(session.getId()))
+                .webSocketSession();
+        System.out.println("Sessão com ID: " + session.getId() + " foi fechada e excluída do HashMap");
     }
 
     @Override

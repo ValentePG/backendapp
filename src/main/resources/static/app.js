@@ -7,6 +7,7 @@ function connectWebSocket() {
   socket.addEventListener("close", handleSocketClose);
   socket.onmessage = (event) => {
     updateLiveChat(event.data);
+    console.log("mensagem recebida: ", event.data);
   };
 }
 
@@ -35,6 +36,7 @@ function setConnected(connected) {
 function connect() {
   setConnected(true);
   connectWebSocket();
+  console.log("Conected");
 }
 
 function disconnect() {
@@ -51,6 +53,7 @@ function sendMessage() {
   };
 
   socket.send(JSON.stringify(message));
+  console.log("mensagem enviada");
 
   $("#message").val("");
 }

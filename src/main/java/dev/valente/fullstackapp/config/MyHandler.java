@@ -1,7 +1,8 @@
 package dev.valente.fullstackapp.config;
 
 import dev.langchain4j.model.openai.OpenAiChatModel;
-import dev.valente.fullstackapp.controller.SessionInfo;
+import dev.valente.fullstackapp.model.ChatInput;
+import dev.valente.fullstackapp.model.SessionInfo;
 import dev.valente.fullstackapp.singleton.UserSessionSingleton;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.socket.CloseStatus;
@@ -9,6 +10,9 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 import org.springframework.web.util.HtmlUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -33,18 +37,30 @@ public class MyHandler extends AbstractWebSocketHandler {
 
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
         //StandardWebSocketSession
+        
+        
 
-
-        var idSessaoAtual = UUID.fromString(session.getId());
+        UUID currentSessionId = UUID.fromString(session.getId());
         String payload = message.getPayload();
+
+        try{
+            Gson gson = new Gson();
+            ChatInput info = gson.fromJson(payload, ChatInput.class);
+        } catch (Exception e){
+            System.err.println(e.getMessage());
+        }
+
+        TextMessage textMessage = new TextMessage(payload);
+
+
 
         userSessions.forEach((id, wbs) -> {
             try {
-                if(idSessaoAtual != id){
-                    wbs.webSocketSession().sendMessage(new TextMessage(HtmlUtils.htmlEscape(payload)));
+                if(currentSessionId != id){
+                    wbs.webSocketSession().sendMessage(textMessage);
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                System.err.println("Erro sending messae: " + e.getMessage());
             }
         });
 

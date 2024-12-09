@@ -1,4 +1,4 @@
-package dev.valente.fullstackapp.controller;
+package dev.valente.fullstackapp.model;
 
 import org.springframework.web.socket.WebSocketSession;
 

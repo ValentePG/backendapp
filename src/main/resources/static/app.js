@@ -6,8 +6,8 @@ function connectWebSocket() {
   socket.addEventListener("error", handleSocketError);
   socket.addEventListener("close", handleSocketClose);
   socket.onmessage = (event) => {
-    updateLiveChat(event.data);
-    console.log("mensagem recebida: ", event.data);
+    const message = JSON.parse(event.data);
+    updateLiveChat(message);
   };
 }
 
@@ -59,7 +59,7 @@ function sendMessage() {
 }
 
 function updateLiveChat(message) {
-  $("#livechat").append("<tr><td>" + message + "</td></tr>");
+  $("#livechat").append("<tr><td>" + message.user + ":" + message.message + "</td></tr>");
 }
 
 $(function () {

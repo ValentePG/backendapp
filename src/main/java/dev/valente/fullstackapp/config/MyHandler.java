@@ -44,8 +44,8 @@ public class MyHandler extends AbstractWebSocketHandler {
         String payload = message.getPayload();
 
         try{
-            Gson gson = new Gson();
-            ChatInput info = gson.fromJson(payload, ChatInput.class);
+            ObjectMapper objectMapper = new ObjectMapper();
+            ChatInput info = objectMapper.readValue(payload, ChatInput.class);
         } catch (Exception e){
             System.err.println(e.getMessage());
         }

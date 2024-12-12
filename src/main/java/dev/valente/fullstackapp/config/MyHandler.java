@@ -55,6 +55,13 @@ public class MyHandler extends AbstractWebSocketHandler {
 
         TextMessage textMessage = new TextMessage(payload);
 
+//        userSessions.forEach((id, wbs) -> {
+//            if(wbs.getChatInput() != null){
+//                System.out.println("Usuário: " + wbs.getChatInput().user() +
+//                        "\nMensagem: " + wbs.getChatInput().message() +
+//                        "\nID: " + wbs.getSession().getId());
+//            }
+//        });
 
 
         userSessions.forEach((id, wbs) -> {
@@ -67,23 +74,13 @@ public class MyHandler extends AbstractWebSocketHandler {
             }
         });
 
-        StringBuilder builder = new StringBuilder();
-
-//        userSessions.forEach((id, wbs) -> {
-//            builder.append(wbs.getChatInput().user()).append(" ").append(wbs.getChatInput().message())
-//                    .append(wbs.getSession().getId());
-//            System.out.println(builder);
-//        });
-
 
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        HttpHeaders headers = session.getHandshakeHeaders();
         UUID id = UUID.fromString(session.getId());
-        SessionInfoC sessionInfoC = new SessionInfoC(session.getId(), session);
-
+        SessionInfoC sessionInfoC = new SessionInfoC(id, session);
         userSessions.put(id, sessionInfoC);
         System.out.println("Sessão com ID: " + session.getId() + " foi aberta e adicionada ao HashMap");
     }

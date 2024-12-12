@@ -4,15 +4,17 @@ import jakarta.persistence.Entity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.UUID;
+
 public class SessionInfoC {
 
-    private String sessionId;
+    private UUID sessionId;
 
     private ChatInput chatInput;
 
     private WebSocketSession session;
 
-    public SessionInfoC(String sessionId, WebSocketSession session) {
+    public SessionInfoC(UUID sessionId, WebSocketSession session) {
         this.sessionId = sessionId;
         this.session = session;
     }
@@ -25,11 +27,11 @@ public class SessionInfoC {
         this.chatInput = chatInput;
     }
 
-    public String getSessionId() {
+    public UUID getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(String sessionId) {
+    public void setSessionId(UUID sessionId) {
         this.sessionId = sessionId;
     }
 

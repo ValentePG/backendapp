@@ -4,16 +4,17 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import dev.valente.fullstackapp.model.SessionInfo;
+import dev.valente.fullstackapp.model.SessionInfoC;
 
 public final class UserSessionSingleton {
 
-    private static final ConcurrentHashMap<UUID, SessionInfo> userSessions = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<UUID, SessionInfoC> userSessions = new ConcurrentHashMap<>();
 
     private UserSessionSingleton() {
 
     }
 
-    public static ConcurrentHashMap<UUID, SessionInfo> getInstance(){
+    public static ConcurrentHashMap<UUID, SessionInfoC> getInstance(){
         return userSessions;
     }
 }

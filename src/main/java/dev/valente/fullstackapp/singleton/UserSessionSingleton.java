@@ -3,7 +3,6 @@ package dev.valente.fullstackapp.singleton;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import dev.valente.fullstackapp.model.SessionInfo;
 import dev.valente.fullstackapp.model.SessionInfoC;
 
 public final class UserSessionSingleton {
